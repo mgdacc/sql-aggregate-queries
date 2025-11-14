@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funciones de Agregación en SQL</title>
+    <style>
+        /* === ESTILOS GLOBALES Y DE ESCRITORIO === */
+        body {
+            font-family: Arial, sans-serif; background-color: #f0f0f0; margin: 0;
+            padding: 40px; display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; box-sizing: border-box; transition: padding 0.3s ease;
+        }
+
+        .slideshow-container { position: relative; width: 90%; max-width: 960px; }
+        
+        .slide {
+            display: none; background-color: #fff; border: 1px solid #ccc;
+            height: 540px; padding: 40px 60px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            flex-direction: column; justify-content: center; position: relative;
+            box-sizing: border-box;
+        }
+
+        .fade { animation-name: fade; animation-duration: 0.5s; }
+        @keyframes fade { from {opacity: .4} to {opacity: 1} }
+
+        .prev, .next {
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%);
+            width: 50px; height: 50px; background-color: #cccccc; color: #333;
+            border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 24px; transition: all 0.3s ease;
+            user-select: none; z-index: 10;
+        }
+
+        .prev { left: -70px; }
+        .next { right: -70px; }
+        .prev:hover, .next:hover { background-color: #aaaaaa; }
+
+        .slide h1 { font-size: 3.5em; text-align: center; border-bottom: 4px solid #256eff; padding-bottom: 20px; color: #005A9C; }
+        .slide h2 { font-size: 2.8em; margin-top: 0; margin-bottom: 30px; text-align: center; color: #005A9C; }
+        .single-content { text-align: center; }
+        .single-content p { font-size: 1.5em; color: #444; }
+        .single-content pre { font-size: 1.2em; display: inline-block; text-align: left; max-width: 100%; }
+        pre { background-color: #2d3636; color: #fff; padding: 15px; border-radius: 5px; font-size: 1.1em; white-space: pre-wrap; }
+        .footer { position: absolute; bottom: 20px; right: 40px; font-size: 1em; color: #888; }
+
+        /* === MEDIA QUERIES === */
+        @media screen and (max-width: 768px) {
+            body { padding: 15px; }
+            .slideshow-container { width: 100%; padding-bottom: 75px; }
+            .slide { height: auto; min-height: 75vh; padding: 20px 25px; }
+            .prev, .next { top: auto; bottom: 15px; width: 45px; height: 45px; }
+            .prev { left: 50%; transform: translateX(-110%); }
+            .next { left: 50%; transform: translateX(10%); right: auto; }
+            .slide h1 { font-size: 2.2em; }
+            .slide h2 { font-size: 1.8em; }
+            .single-content p { font-size: 1.1em; }
+            .single-content pre { font-size: 1em; }
+            .footer { font-size: 0.8em; right: 25px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slideshow-container">
+        
+        <!-- =============================================================== -->
+        <!-- INICIO DEL CONTENIDO DE LAS DIAPOSITIVAS -->
+        <!-- =============================================================== -->
+
+        <div class="slide fade">
+            <h1>Cheat Sheet de SQL</h1>
+            <h2 style="color:#333; border:none;">Consultas de Agregación</h2>
+            <div class="footer">1 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>¿Qué es una Agregación?</h2>
+            <div class="single-content">
+                <p>Es una operación que toma un conjunto de filas (muchos valores) y devuelve un único valor de resumen.</p>
+                <p style="font-size: 1.2em;">Son la base para generar reportes, estadísticas y análisis de negocio.</p>
+            </div>
+            <div class="footer">2 / 11</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>COUNT: Contar Filas</h2>
+            <div class="single-content">
+                <p>Cuenta el número de filas que cumplen una condición. `COUNT(*)` cuenta todas las filas de la tabla.</p>
+                <pre><code>-- ¿Cuántos productos hay en total en el inventario?
+SELECT COUNT(*) FROM Productos;
+
+-- ¿Cuántos empleados hay en el departamento de 'Ventas'?
+SELECT COUNT(*) FROM Empleados WHERE Departamento = 'Ventas';</code></pre>
+            </div>
+            <div class="footer">3 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>SUM: Sumar Valores</h2>
+            <div class="single-content">
+                <p>Suma todos los valores de una columna numérica.</p>
+                <pre><code>-- ¿Cuál es el valor total de todas las ventas?
+SELECT SUM(Monto) FROM Ventas;
+
+-- ¿Cuál es el total de salarios que paga la empresa?
+SELECT SUM(Salario) FROM Empleados;</code></pre>
+            </div>
+            <div class="footer">4 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>AVG: Calcular el Promedio</h2>
+            <div class="single-content">
+                <p>Calcula el valor medio (promedio) de una columna numérica.</p>
+                <pre><code>-- ¿Cuál es el precio promedio de nuestros productos?
+SELECT AVG(Precio) FROM Productos;
+
+-- ¿Cuál es la edad promedio de los empleados?
+SELECT AVG(Edad) FROM Empleados;</code></pre>
+            </div>
+            <div class="footer">5 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>MIN y MAX: Valor Mínimo y Máximo</h2>
+            <div class="single-content">
+                <p>Devuelven el valor más bajo (MIN) o más alto (MAX) de una columna.</p>
+                <pre><code>-- ¿Cuál es el producto más barato y el más caro?
+SELECT MIN(Precio), MAX(Precio) FROM Productos;
+
+-- ¿Cuál fue la fecha de la primera y la última venta?
+SELECT MIN(FechaVenta), MAX(FechaVenta) FROM Ventas;</code></pre>
+            </div>
+            <div class="footer">6 / 11</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>GROUP BY: Agrupar para Analizar</h2>
+            <div class="single-content">
+                <p>La verdadera potencia aparece al combinar agregaciones con `GROUP BY`. Esta cláusula agrupa filas con el mismo valor para que puedas aplicar funciones a cada grupo.</p>
+                <pre><code>-- ¿Cuántos productos hay POR CADA categoría?
+SELECT Categoria, COUNT(*)
+FROM Productos
+GROUP BY Categoria;</code></pre>
+            </div>
+            <div class="footer">7 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>GROUP BY con Múltiples Funciones</h2>
+            <div class="single-content">
+                <p>Puedes aplicar varias funciones de agregación al mismo tiempo sobre los grupos.</p>
+                <pre><code>-- Para cada categoría, dame el total de productos y su precio promedio.
+SELECT
+    Categoria,
+    COUNT(*) AS TotalProductos,
+    AVG(Precio) AS PrecioPromedio
+FROM Productos
+GROUP BY Categoria;</code></pre>
+            </div>
+            <div class="footer">8 / 11</div>
+        </div>
+
+        <div class="slide fade">
+            <h2>HAVING: Filtrar Grupos</h2>
+            <div class="single-content">
+                <p>`HAVING` es como un `WHERE`, pero se aplica **después** de agrupar los datos. Sirve para filtrar los grupos que no cumplen una condición.</p>
+                <pre><code>-- Muéstrame solo las categorías que tienen MÁS de 10 productos.
+SELECT Categoria, COUNT(*)
+FROM Productos
+GROUP BY Categoria
+HAVING COUNT(*) > 10;</code></pre>
+            </div>
+            <div class="footer">9 / 11</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>WHERE vs. HAVING</h2>
+            <div class="single-content">
+                <p><b>`WHERE`</b> filtra filas <b>antes</b> de la agregación.<br><b>`HAVING`</b> filtra grupos <b>después</b> de la agregación.</p>
+                <pre><code>-- Ventas totales por país, pero solo de clientes de 'Europa'
+-- y solo si el total de ventas supera 10000.
+SELECT Pais, SUM(Monto)
+FROM Ventas
+WHERE Continente = 'Europa' -- Filtra filas primero
+GROUP BY Pais
+HAVING SUM(Monto) > 10000; -- Filtra grupos después</code></pre>
+            </div>
+            <div class="footer">10 / 11</div>
+        </div>
+        
+        <div class="slide fade">
+            <h2>Resumen Final</h2>
+            <div class="single-content">
+                <p>Con las funciones de agregación, `GROUP BY` y `HAVING`, puedes transformar largas listas de datos en resúmenes claros y útiles.</p>
+                <p style="font-size: 1.2em;">Has pasado de "ver datos" a "entender datos".</p>
+            </div>
+            <div class="footer">11 / 11</div>
+        </div>
+        
+        <!-- =============================================================== -->
+        <!-- FIN DEL CONTENIDO DE LAS DIAPOSITIVAS -->
+        <!-- =============================================================== -->
+
+        <!-- Botones de navegación (No es necesario editar) -->
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+    </div>
+
+    <!-- Lógica de JavaScript (No es necesario editar) -->
+    <script>
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("slide");
+            if (n > slides.length) { slideIndex = 1 } 
+            if (n < 1) { slideIndex = slides.length }
+            
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            
+            slides[slideIndex - 1].style.display = "flex";
+        }
+    </script>
+
+</body>
+</html>
